@@ -69,9 +69,9 @@ jobs:
           docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           
           # Stop and remove any existing container
-          docker stop my-mongo-api || true
-          docker rm my-mongo-api || true
+          docker stop mongo-api-repo || true
+          docker rm mongo-api-repo || true
 
           # Run the container
-          docker run -d -p 80:3000 --name my-mongo-api 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
+          docker run -d -p 80:3000 --name mongo-api-repo 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           EOF

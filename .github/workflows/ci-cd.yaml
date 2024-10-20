@@ -39,9 +39,14 @@ jobs:
           docker tag mongo-api-repo 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           docker push 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
 
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/mongo-api-keypair.pem
+          chmod 600 ~/mongo-api-keypair.pem
+
       - name: Deploy to AWS EC2
         run: |
-          ssh -i ../my-ec2-keypair.pem ec2-user@172.31.46.143 <<EOF
+          ssh -i ~/my-ec2-keypair.pem ec2-user@172.31.46.143 <<EOF
           docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           docker stop my-mongo-api || true
           docker rm my-mongo-api || true

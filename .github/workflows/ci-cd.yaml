@@ -47,8 +47,25 @@ jobs:
       - name: Deploy to AWS EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/mongo-api-keypair.pem ubuntu@34.207.254.124 <<EOF
+          # Update package list
+          sudo apt-get update
+          
+          # Install Docker if it's not installed
+          if ! [ -x "$(command -v docker)" ]; then
+            sudo apt-get install -y docker.io
+          fi
+
+          # Start Docker service
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+          # Pull the latest image from ECR
           docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
+          
+          # Stop and remove any existing container
           docker stop my-mongo-api || true
           docker rm my-mongo-api || true
+
+          # Run the container
           docker run -d -p 80:3000 --name my-mongo-api 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           EOF

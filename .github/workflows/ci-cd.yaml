@@ -59,6 +59,12 @@ jobs:
           sudo systemctl start docker
           sudo systemctl enable docker
 
+          # Add ubuntu user to the docker group
+          sudo usermod -aG docker ubuntu
+
+          # Log out and back in to apply group changes
+          newgrp docker
+
           # Pull the latest image from ECR
           docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           

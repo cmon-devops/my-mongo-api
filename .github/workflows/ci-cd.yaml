@@ -49,7 +49,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/mongo-api-keypair.pem ubuntu@34.207.254.124 <<EOF
           # Update package list
           sudo apt-get update
-          
+
           # Install Docker if it's not installed
           if ! [ -x "$(command -v docker)" ]; then
             sudo apt-get install -y docker.io
@@ -58,6 +58,11 @@ jobs:
           # Start Docker service
           sudo systemctl start docker
           sudo systemctl enable docker
+
+          # Install AWS CLI
+          if ! [ -x "$(command -v aws)" ]; then
+            sudo apt-get install -y awscli
+          fi
 
           # Configure AWS CLI
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -71,10 +76,9 @@ jobs:
           sudo docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           
           # Stop and remove any existing container
-          sudo docker stop mongo-api-repo || true
-          sudo docker rm mongo-api-repo || true
+          sudo docker stop my-mongo-api || true
+          sudo docker rm my-mongo-api || true
 
           # Run the container
-          sudo docker run -d -p 80:3000 --name mongo-api-repo 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
+          sudo docker run -d -p 80:3000 --name my-mongo-api 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           EOF
-

@@ -46,7 +46,7 @@ jobs:
 
       - name: Deploy to AWS EC2
         run: |
-          ssh -i ~/mongo-api-keypair.pem ec2-user@172.31.46.143 <<EOF
+          ssh -i ~/mongo-api-keypair.pem ec2-user@34.207.254.124 <<EOF
           docker pull 597088016131.dkr.ecr.us-east-1.amazonaws.com/mongo-api-repo:latest
           docker stop my-mongo-api || true
           docker rm my-mongo-api || true
